@@ -68,6 +68,9 @@ local config = {
         }
       },
       {
+        "tpope/vim-vinegar"
+      },
+      {
         "tpope/vim-sleuth"
       },
       {

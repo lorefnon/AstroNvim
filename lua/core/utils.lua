@@ -101,9 +101,9 @@ function M.disabled_builtins()
   g.loaded_getscriptPlugin = false
   g.loaded_gzip = false
   g.loaded_logipat = false
-  g.loaded_netrwFileHandlers = false
-  g.loaded_netrwPlugin = false
-  g.loaded_netrwSettngs = false
+  -- g.loaded_netrwFileHandlers = false
+  -- g.loaded_netrwPlugin = false
+  -- g.loaded_netrwSettngs = false
   g.loaded_remote_plugins = false
   g.loaded_tar = false
   g.loaded_tarPlugin = false
