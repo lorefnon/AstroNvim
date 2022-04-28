@@ -53,8 +53,8 @@ else
 end
 
 -- Move text up and down
-map("n", "<A-j>", "<Esc><cmd>m .+1<CR>==gi", { desc = "Move text down" })
-map("n", "<A-k>", "<Esc><cmd>m .-2<CR>==gi", { desc = "Move text up" })
+-- map("n", "<A-j>", "<Esc><cmd>m .+1<CR>==gi", { desc = "Move text down" })
+-- map("n", "<A-k>", "<Esc><cmd>m .-2<CR>==gi", { desc = "Move text up" })
 
 -- LSP
 map("n", "K", vim.lsp.buf.hover, { desc = "Hover symbol details" })
