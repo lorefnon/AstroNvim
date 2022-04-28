@@ -23,7 +23,7 @@ local config = {
   -- Disable default plugins
   enabled = {
     bufferline = true,
-    neo_tree = true,
+    neo_tree = false,
     lualine = true,
     gitsigns = true,
     colorizer = true,
@@ -33,7 +33,7 @@ local config = {
     indent_blankline = true,
     dashboard = true,
     which_key = true,
-    neoscroll = true,
+    neoscroll = false,
     ts_rainbow = true,
     ts_autotag = true,
   },
