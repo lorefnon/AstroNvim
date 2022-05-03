@@ -148,15 +148,15 @@ if packer_status_ok then
     },
 
     -- Snippet collection
-    {
-      "rafamadriz/friendly-snippets",
-      after = "nvim-cmp",
-    },
+    -- {
+    --  "rafamadriz/friendly-snippets",
+    --  after = "nvim-cmp",
+    -- },
 
     -- Snippet engine
     {
       "L3MON4D3/LuaSnip",
-      after = "friendly-snippets",
+      -- after = "friendly-snippets",
       config = function()
         require("configs.luasnip").config()
       end,
