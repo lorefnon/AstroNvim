@@ -3,6 +3,16 @@ local config = {
   -- Set colorscheme
   colorscheme = "default_theme",
 
+  -- set vim options here (vim.<first_key>.<second_key> =  value)
+  options = {
+    opt = {
+      relativenumber = true, -- sets vim.opt.relativenumber
+    },
+    g = {
+      mapleader = " ", -- sets vim.g.mapleader
+    },
+  },
+
   -- Default theme configuration
   default_theme = {
     diagnostics_style = { italic = true },
@@ -19,24 +29,6 @@ local config = {
     end,
   },
 
-  -- Disable default plugins
-  enabled = {
-    bufferline = true,
-    neo_tree = true,
-    lualine = true,
-    gitsigns = true,
-    colorizer = true,
-    toggle_term = true,
-    comment = true,
-    symbols_outline = true,
-    indent_blankline = true,
-    dashboard = true,
-    which_key = true,
-    neoscroll = true,
-    ts_rainbow = true,
-    ts_autotag = true,
-  },
-
   -- Disable AstroNvim ui features
   ui = {
     nui_input = true,
@@ -47,6 +39,10 @@ local config = {
   plugins = {
     -- Add plugins, the packer syntax without the "use"
     init = {
+      -- You can disable default plugins as follows:
+      -- ["goolord/alpha-nvim"] = { disable = true },
+
+      -- You can also add new plugins here as well:
       -- { "andweeb/presence.nvim" },
       -- {
       --   "ray-x/lsp_signature.nvim",
@@ -60,14 +56,22 @@ local config = {
     treesitter = {
       ensure_installed = { "lua" },
     },
+    ["nvim-lsp-installer"] = {
+      ensure_installed = { "sumneko_lua" },
+    },
     packer = {
       compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
     },
   },
 
-  -- Add paths for including more VS Code style snippets in luasnip
+  -- LuaSnip Options
   luasnip = {
+    -- Add paths for including more VS Code style snippets in luasnip
     vscode_snippet_paths = {},
+    -- Extend filetypes
+    filetype_extend = {
+      javascript = { "javascriptreact" },
+    },
   },
 
   -- Modify which-key registration
@@ -102,13 +106,17 @@ local config = {
 
   -- Extend LSP configuration
   lsp = {
+    -- enable servers that you already have installed without lsp-installer
+    servers = {
+      -- "pyright"
+    },
     -- add to the server on_attach function
     -- on_attach = function(client, bufnr)
     -- end,
 
     -- override the lsp installer server-registration function
     -- server_registration = function(server, opts)
-    --   server:setup(opts)
+    --   require("lspconfig")[server.name].setup(opts)
     -- end
 
     -- Add overrides for LSP server settings, the keys are the name of the server
@@ -161,7 +169,7 @@ local config = {
       },
       -- NOTE: You can remove this on attach function to disable format on save
       on_attach = function(client)
-        if client.resolved_capabilities.document_formatting then
+        if client.server_capabilities.documentFormattingProvider then
           vim.api.nvim_create_autocmd("BufWritePre", {
             desc = "Auto format before save",
             pattern = "<buffer>",
@@ -175,13 +183,8 @@ local config = {
   -- This function is run last
   -- good place to configure mappings and vim options
   polish = function()
-    local map = vim.keymap.set
-    local set = vim.opt
-    -- Set options
-    set.relativenumber = true
-
     -- Set key bindings
-    map("n", "<C-s>", ":w!<CR>")
+    vim.keymap.set("n", "<C-s>", ":w!<CR>")
 
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})

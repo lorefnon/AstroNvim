@@ -7,10 +7,15 @@ if status_ok then
   local mappings = {
     n = {
       ["<leader>"] = {
-        ["w"] = { "<cmd>w<CR>", "Save" },
-        ["q"] = { "<cmd>q<CR>", "Quit" },
-        ["h"] = { "<cmd>nohlsearch<CR>", "No Highlight" },
+        ["w"] = { "<cmd>w<cr>", "Save" },
+        ["q"] = { "<cmd>q<cr>", "Quit" },
+        ["h"] = { "<cmd>nohlsearch<cr>", "No Highlight" },
+        ["u"] = { require("core.utils").toggle_url_match, "Toggle URL Highlights" },
 
+        f = {
+          name = "File",
+          n = { "<cmd>enew<cr>", "New File" },
+        },
         p = {
           name = "Packer",
           c = { "<cmd>PackerCompile<cr>", "Compile" },
@@ -19,7 +24,6 @@ if status_ok then
           S = { "<cmd>PackerStatus<cr>", "Status" },
           u = { "<cmd>PackerUpdate<cr>", "Update" },
         },
-
         l = {
           name = "LSP",
           a = { vim.lsp.buf.code_action, "Code Action" },
@@ -66,19 +70,36 @@ if status_ok then
   end
 
   if utils.is_available "neo-tree.nvim" then
-    mappings.n["<leader>"].e = { "<cmd>Neotree toggle<CR>", "Toggle Explorer" }
-    mappings.n["<leader>"].o = { "<cmd>Neotree focus<CR>", "Focus Explorer" }
+    mappings.n["<leader>"].e = { "<cmd>Neotree toggle<cr>", "Toggle Explorer" }
+    mappings.n["<leader>"].o = { "<cmd>Neotree focus<cr>", "Focus Explorer" }
   end
 
-  if utils.is_available "dashboard-nvim" then
-    mappings.n["<leader>"].d = { "<cmd>Dashboard<CR>", "Dashboard" }
+  if utils.is_available "alpha-nvim" then
+    mappings.n["<leader>"].d = { "<cmd>Alpha<cr>", "Alpha Dashboard" }
+  end
 
-    init_table("n", "<leader>", "f")
-    mappings.n["<leader>"].f.n = { "<cmd>DashboardNewFile<CR>", "New File" }
-
+  if utils.is_available "neovim-session-manager" then
     init_table("n", "<leader>", "S")
-    mappings.n["<leader>"].S.s = { "<cmd>SessionSave<CR>", "Save Session" }
-    mappings.n["<leader>"].S.l = { "<cmd>SessionLoad<CR>", "Load Session" }
+    mappings.n["<leader>"].S.l = {
+      "<cmd>SessionManager! load_last_session<cr>",
+      "Load last session",
+    }
+    mappings.n["<leader>"].S.s = {
+      "<cmd>SessionManager! save_current_session<cr>",
+      "Save this session",
+    }
+    mappings.n["<leader>"].S.d = {
+      "<cmd>SessionManager! delete_session<cr>",
+      "Delete session",
+    }
+    mappings.n["<leader>"].S.f = {
+      "<cmd>SessionManager! load_session<cr>",
+      "Search sessions",
+    }
+    mappings.n["<leader>"].S["."] = {
+      "<cmd>SessionManager! load_current_dir_session<cr>",
+      "Load current directory session",
+    }
   end
 
   if utils.is_available "Comment.nvim" then
@@ -91,7 +112,7 @@ if status_ok then
   end
 
   if utils.is_available "vim-bbye" then
-    mappings.n["<leader>"].c = { "<cmd>Bdelete!<CR>", "Close Buffer" }
+    mappings.n["<leader>"].c = { "<cmd>Bdelete!<cr>", "Close Buffer" }
   end
 
   if utils.is_available "gitsigns.nvim" then
@@ -197,9 +218,9 @@ if status_ok then
     mappings.n["<leader>"].t.v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" }
   end
 
-  if utils.is_available "symbols-outline.nvim" then
+  if utils.is_available "aerial.nvim" then
     init_table("n", "<leader>", "l")
-    mappings.n["<leader>"].l.S = { "<cmd>SymbolsOutline<CR>", "Symbols Outline" }
+    mappings.n["<leader>"].l.S = { "<cmd>AerialToggle<cr>", "Symbols Outline" }
   end
 
   if utils.is_available "telescope.nvim" then
@@ -308,7 +329,12 @@ if status_ok then
     init_table("n", "<leader>", "l")
     mappings.n["<leader>"].l.s = {
       function()
-        require("telescope.builtin").lsp_document_symbols()
+        local aerial_avail, _ = pcall(require, "aerial")
+        if aerial_avail then
+          require("telescope").extensions.aerial.aerial()
+        else
+          require("telescope.builtin").lsp_document_symbols()
+        end
       end,
       "Document Symbols",
     }

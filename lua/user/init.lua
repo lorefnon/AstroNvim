@@ -49,6 +49,14 @@ local config = {
     -- Add plugins, the packer syntax without the "use"
     init = {
       {
+        "kyazdani42/nvim-tree.lua",
+        config = function()
+          require'nvim-tree'.setup {
+          }
+        end,
+        opt = false,
+      },
+      {
         "phaazon/hop.nvim",
         cmd = {
           "HopWord",
@@ -96,6 +104,12 @@ local config = {
         "mbbill/undotree",
         cmd = {
           "UndotreeToggle"
+        }
+      },
+      {
+        "fsharp/vim-fsharp",
+        ft = {
+          "fs", "fsharp"
         }
       },
       {
@@ -282,6 +296,9 @@ local config = {
     map("n", "gR", "<cmd>Trouble lsp_references<cr>", opts)
     map("n", "F", vim.lsp.buf.code_action, { desc = "LSP code action" })
     map("n", "R", vim.lsp.buf.rename, { desc = "Rename current symbol" })
+
+    map("n", "<leader>ft", "<cmd>NvimTreeToggle<CR>", opts)
+    map("n", "<leader>fq", "<cmd>NvimTreeFindFile<CR>", opts)
 
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})

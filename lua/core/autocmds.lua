@@ -18,42 +18,40 @@ cmd("WinEnter", {
   command = "set cursorline",
 })
 
-if utils.is_available "dashboard-nvim" then
-  augroup("dashboard_settings", {})
+augroup("highlighturl", {})
+cmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
+  desc = "URL Highlighting",
+  group = "highlighturl",
+  pattern = "*",
+  callback = require("core.utils").set_url_match,
+})
+
+if utils.is_available "alpha-nvim" then
+  augroup("alpha_settings", {})
   if utils.is_available "bufferline.nvim" then
     cmd("FileType", {
-      desc = "Disable tabline for dashboard",
-      group = "dashboard_settings",
-      pattern = "dashboard",
-      command = "set showtabline=0",
-    })
-    cmd("BufWinLeave", {
-      desc = "Reenable tabline when leaving dashboard",
-      group = "dashboard_settings",
-      pattern = "<buffer>",
-      command = "set showtabline=2",
+      desc = "Disable tabline for alpha",
+      group = "alpha_settings",
+      pattern = "alpha",
+      command = "set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2",
     })
   end
   cmd("FileType", {
-    desc = "Disable statusline for dashboard",
-    group = "dashboard_settings",
-    pattern = "dashboard",
-    command = "set laststatus=0",
-  })
-  cmd("BufWinLeave", {
-    desc = "Reenable statusline when leaving dashboard",
-    group = "dashboard_settings",
-    pattern = "<buffer>",
-    command = "set laststatus=3",
+    desc = "Disable statusline for alpha",
+    group = "alpha_settings",
+    pattern = "alpha",
+    command = "set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3",
   })
   cmd("BufEnter", {
-    desc = "No cursorline on dashboard",
-    group = "dashboard_settings",
+    desc = "No cursorline on alpha",
+    group = "alpha_settings",
     pattern = "*",
-    command = "if &ft is 'dashboard' | set nocursorline | endif",
+    command = "if &ft is 'alpha' | set nocursorline | endif",
   })
 end
 
 create_command("AstroUpdate", require("core.utils").update, { desc = "Update AstroNvim" })
+
+create_command("ToggleHighlightURL", require("core.utils").toggle_url_match, { desc = "Toggle URL Highlights" })
 
 return M
