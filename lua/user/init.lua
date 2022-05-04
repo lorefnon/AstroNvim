@@ -57,6 +57,12 @@ local config = {
         opt = false,
       },
       {
+        "terryma/vim-expand-region"
+      },
+      {
+        "tpope/vim-surround"
+      },
+      {
         "phaazon/hop.nvim",
         cmd = {
           "HopWord",
