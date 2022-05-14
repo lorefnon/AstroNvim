@@ -1,57 +1,88 @@
-local M = {}
-
-local utils = require "core.utils"
-
+local is_available = astronvim.is_available
 local cmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local create_command = vim.api.nvim_create_user_command
 
-augroup("cursor_off", {})
-cmd("WinLeave", {
-  desc = "No cursorline",
-  group = "cursor_off",
-  command = "set nocursorline",
-})
-cmd("WinEnter", {
-  desc = "No cursorline",
-  group = "cursor_off",
-  command = "set cursorline",
-})
-
-augroup("highlighturl", {})
+augroup("highlighturl", { clear = true })
 cmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
   desc = "URL Highlighting",
   group = "highlighturl",
   pattern = "*",
-  callback = require("core.utils").set_url_match,
+  callback = function()
+    astronvim.set_url_match()
+  end,
 })
 
-if utils.is_available "alpha-nvim" then
-  augroup("alpha_settings", {})
-  if utils.is_available "bufferline.nvim" then
+if is_available "alpha-nvim" then
+  augroup("alpha_settings", { clear = true })
+  if is_available "bufferline.nvim" then
     cmd("FileType", {
       desc = "Disable tabline for alpha",
       group = "alpha_settings",
       pattern = "alpha",
-      command = "set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2",
+      callback = function()
+        local prev_showtabline = vim.opt.showtabline
+        vim.opt.showtabline = 0
+        cmd("BufUnload", {
+          pattern = "<buffer>",
+          callback = function()
+            vim.opt.showtabline = prev_showtabline
+          end,
+        })
+      end,
     })
   end
   cmd("FileType", {
     desc = "Disable statusline for alpha",
     group = "alpha_settings",
     pattern = "alpha",
-    command = "set laststatus=0 | autocmd BufUnload <buffer> set laststatus=3",
+    callback = function()
+      local prev_status = vim.opt.laststatus
+      vim.opt.laststatus = 0
+      cmd("BufUnload", {
+        pattern = "<buffer>",
+        callback = function()
+          vim.opt.laststatus = prev_status
+        end,
+      })
+    end,
   })
-  cmd("BufEnter", {
-    desc = "No cursorline on alpha",
+  cmd("VimEnter", {
+    desc = "Start Alpha when vim is opened with no arguments",
     group = "alpha_settings",
-    pattern = "*",
-    command = "if &ft is 'alpha' | set nocursorline | endif",
+    callback = function()
+      -- optimized start check from https://github.com/goolord/alpha-nvim
+      local alpha_avail, alpha = pcall(require, "alpha")
+      if alpha_avail then
+        local should_skip = false
+        if vim.fn.argc() > 0 or vim.fn.line2byte "$" ~= -1 or not vim.o.modifiable then
+          should_skip = true
+        else
+          for _, arg in pairs(vim.v.argv) do
+            if arg == "-b" or arg == "-c" or vim.startswith(arg, "+") or arg == "-S" then
+              should_skip = true
+              break
+            end
+          end
+        end
+        if not should_skip then
+          alpha.start(true)
+        end
+      end
+    end,
   })
 end
 
-create_command("AstroUpdate", require("core.utils").update, { desc = "Update AstroNvim" })
+if is_available "feline.nvim" then
+  augroup("feline_setup", { clear = true })
+  cmd("ColorScheme", {
+    desc = "Reload feline on colorscheme change",
+    group = "feline_setup",
+    callback = function()
+      require("configs.feline").config()
+    end,
+  })
+end
 
-create_command("ToggleHighlightURL", require("core.utils").toggle_url_match, { desc = "Toggle URL Highlights" })
-
-return M
+create_command("AstroUpdate", astronvim.update, { desc = "Update AstroNvim" })
+create_command("ToggleHighlightURL", astronvim.toggle_url_match, { desc = "Toggle URL Highlights" })

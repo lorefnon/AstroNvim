@@ -1,14 +1,11 @@
-local M = {}
-
-local user_plugin_opts = require("core.utils").user_plugin_opts
-
-local colorscheme = user_plugin_opts "colorscheme"
+local default = "default_theme"
+local colorscheme = astronvim.user_plugin_opts("colorscheme", default, false)
 if not vim.tbl_contains(vim.fn.getcompletion("", "color"), colorscheme) then
-  colorscheme = require("core.defaults").colorscheme
+  colorscheme = default
 end
 vim.api.nvim_command(("colorscheme %s"):format(colorscheme))
 
-local options = user_plugin_opts("options", {
+astronvim.vim_opts(astronvim.user_plugin_opts("options", {
   opt = {
     clipboard = "unnamedplus", -- Connection to the system clipboard
     completeopt = { "menuone", "noselect" }, -- Options for insert mode completion
@@ -19,6 +16,8 @@ local options = user_plugin_opts("options", {
     fillchars = { eob = " " }, -- Disable `~` on nonexistent lines
     history = 100, -- Number of commands to remember in a history table
     ignorecase = true, -- Case insensitive searching
+    laststatus = 3, -- globalstatus
+    lazyredraw = true, -- lazily redraw screen
     mouse = "a", -- Enable mouse support
     number = true, -- Show numberline
     preserveindent = true, -- Preserve indent structure as much as possible
@@ -46,13 +45,23 @@ local options = user_plugin_opts("options", {
     did_load_filetypes = 0, -- don't use filetype.vim
     highlighturl_enabled = true, -- highlight URLs by default
     mapleader = " ", -- set leader key
+    zipPlugin = false, -- disable zip
+    load_black = false, -- disable black
+    loaded_2html_plugin = true, -- disable 2html
+    loaded_getscript = true, -- disable getscript
+    loaded_getscriptPlugin = true, -- disable getscript
+    loaded_gzip = true, -- disable gzip
+    loaded_logipat = true, -- disable logipat
+    loaded_matchit = true, -- disable matchit
+    loaded_netrwFileHandlers = true, -- disable netrw
+    loaded_netrwPlugin = true, -- disable netrw
+    loaded_netrwSettngs = true, -- disable netrw
+    loaded_remote_plugins = true, -- disable remote plugins
+    loaded_tar = true, -- disable tar
+    loaded_tarPlugin = true, -- disable tar
+    loaded_zip = true, -- disable zip
+    loaded_zipPlugin = true, -- disable zip
+    loaded_vimball = true, -- disable vimball
+    loaded_vimballPlugin = true, -- disable vimball
   },
-})
-
-for scope, table in pairs(options) do
-  for setting, value in pairs(table) do
-    vim[scope][setting] = value
-  end
-end
-
-return M
+}))

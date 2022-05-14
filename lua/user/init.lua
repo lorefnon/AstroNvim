@@ -63,6 +63,9 @@ local config = {
         "tpope/vim-surround"
       },
       {
+        "vim-scripts/copypath.vim"
+      },
+      {
         "phaazon/hop.nvim",
         cmd = {
           "HopWord",
@@ -289,6 +292,7 @@ local config = {
     local set = vim.opt
     -- Set options
     set.relativenumber = false
+    set.incsearch = true
 
     -- Set key bindings
     local opts = { noremap = true, silent = true }
