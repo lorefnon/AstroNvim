@@ -144,10 +144,6 @@ local config = {
         event = "BufRead"
       },
       {
-        "bronson/vim-trailing-whitespace",
-        event = "BufRead"
-      },
-      {
         "FotiadisM/tabset.nvim",
         config = function()
           require("tabset").setup({
