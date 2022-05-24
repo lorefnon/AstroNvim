@@ -1,5 +1,6 @@
 _G.astronvim = {}
 local stdpath = vim.fn.stdpath
+local tbl_insert = table.insert
 
 local supported_configs = {
   stdpath "config",
@@ -142,23 +143,46 @@ function astronvim.add_cmp_source(source)
   local cmp_avail, cmp = pcall(require, "cmp")
   if cmp_avail then
     local config = cmp.get_config()
-    table.insert(config.sources, source)
+    tbl_insert(config.sources, source)
     cmp.setup(config)
   end
 end
 
-function astronvim.add_user_cmp_source(source)
+function astronvim.get_user_cmp_source(source)
+  source = type(source) == "string" and { name = source } or source
   local priority = astronvim.user_plugin_opts("cmp.source_priority", {
     nvim_lsp = 1000,
     luasnip = 750,
     buffer = 500,
     path = 250,
-  })[source]
-  source = type(source) == "string" and { name = source } or source
+  })[source.name]
   if priority then
     source.priority = priority
   end
-  astronvim.add_cmp_source(source)
+  return source
+end
+
+function astronvim.add_user_cmp_source(source)
+  astronvim.add_cmp_source(astronvim.get_user_cmp_source(source))
+end
+
+function astronvim.null_ls_providers(filetype)
+  local registered = {}
+  local sources_avail, sources = pcall(require, "null-ls.sources")
+  if sources_avail then
+    for _, source in ipairs(sources.get_available(filetype)) do
+      for method in pairs(source.methods) do
+        registered[method] = registered[method] or {}
+        tbl_insert(registered[method], source.name)
+      end
+    end
+  end
+  return registered
+end
+
+function astronvim.null_ls_sources(filetype, source)
+  local methods_avail, methods = pcall(require, "null-ls.methods")
+  return methods_avail and astronvim.null_ls_providers(filetype)[methods.internal[source]] or {}
 end
 
 function astronvim.alpha_button(sc, txt)
