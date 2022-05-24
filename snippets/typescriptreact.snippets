@@ -1,0 +1,13 @@
+snippet solcom "solidjs component"
+    import type { Component } from 'solid-js';
+
+    const ${1}: Component<{${2}}> = p => {
+        return ${3};
+    }
+
+    export default ${1}
+
+snippet mlinetag "multiline tag"
+
+    <${1}${2}>
+    </${1}>
