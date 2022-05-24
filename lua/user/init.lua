@@ -305,6 +305,9 @@ local config = {
 
     map("n", "<leader>ft", "<cmd>NvimTreeToggle<CR>", opts)
     map("n", "<leader>fq", "<cmd>NvimTreeFindFile<CR>", opts)
+    map("n", "<leader>nx", function()
+       require("notify").dismiss({pending = true}) 
+    end, { desc = "Dismiss notifications"})
 
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})
