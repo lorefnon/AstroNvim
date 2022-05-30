@@ -306,7 +306,7 @@ local config = {
     map("n", "<leader>ft", "<cmd>NvimTreeToggle<CR>", opts)
     map("n", "<leader>fq", "<cmd>NvimTreeFindFile<CR>", opts)
     map("n", "<leader>nx", function()
-       require("notify").dismiss({pending = true}) 
+       require("notify").dismiss({pending = true, silent = true}) 
     end, { desc = "Dismiss notifications"})
 
     -- Set autocommands
