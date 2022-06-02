@@ -309,6 +309,9 @@ local config = {
        require("notify").dismiss({pending = true, silent = true}) 
     end, { desc = "Dismiss notifications"})
 
+  map("n", "gt", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer tab" })
+  map("n", "gT", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous buffer tab" })
+
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})
     vim.api.nvim_create_autocmd("BufWritePost", {
