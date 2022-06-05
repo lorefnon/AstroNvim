@@ -55,29 +55,29 @@ local astro_plugins = {
   },
 
   -- Bufferline
-  ["akinsho/bufferline.nvim"] = {
-    after = "nvim-web-devicons",
-    config = function()
-      require("configs.bufferline").config()
-    end,
-  },
+  -- ["akinsho/bufferline.nvim"] = {
+  --   after = "nvim-web-devicons",
+  --   config = function()
+  --     require("configs.bufferline").config()
+  --   end,
+  -- },
 
   -- Better buffer closing
   ["famiu/bufdelete.nvim"] = { cmd = { "Bdelete", "Bwipeout" } },
 
   -- File explorer
-  ["nvim-neo-tree/neo-tree.nvim"] = {
-    branch = "v2.x",
-    module = "neo-tree",
-    cmd = "Neotree",
-    requires = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-    setup = function()
-      vim.g.neo_tree_remove_legacy_commands = true
-    end,
-    config = function()
-      require("configs.neo-tree").config()
-    end,
-  },
+  -- ["nvim-neo-tree/neo-tree.nvim"] = {
+  --   branch = "v2.x",
+  --   module = "neo-tree",
+  --   cmd = "Neotree",
+  --   requires = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+  --   setup = function()
+  --     vim.g.neo_tree_remove_legacy_commands = true
+  --   end,
+  --   config = function()
+  --     require("configs.neo-tree").config()
+  --   end,
+  -- },
 
   -- Statusline
   ["feline-nvim/feline.nvim"] = {
@@ -88,7 +88,7 @@ local astro_plugins = {
   },
 
   -- Parenthesis highlighting
-  ["p00f/nvim-ts-rainbow"] = { after = "nvim-treesitter" },
+  -- ["p00f/nvim-ts-rainbow"] = { after = "nvim-treesitter" },
 
   -- Autoclose tags
   ["windwp/nvim-ts-autotag"] = { after = "nvim-treesitter" },

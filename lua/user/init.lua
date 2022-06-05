@@ -22,7 +22,7 @@ local config = {
 
   -- Disable default plugins
   enabled = {
-    bufferline = true,
+    bufferline = false,
     neo_tree = false,
     lualine = true,
     gitsigns = true,
@@ -57,6 +57,9 @@ local config = {
         opt = false,
       },
       {
+        "ctrlpvim/ctrlp.vim"
+      },
+      {
         "terryma/vim-expand-region"
       },
       {
@@ -77,6 +80,9 @@ local config = {
         config = function()
           require'hop'.setup()
         end
+      },
+      {
+        "ddrscott/vim-side-search"
       },
       {
         "tpope/vim-fugitive",
@@ -309,8 +315,8 @@ local config = {
        require("notify").dismiss({pending = true, silent = true}) 
     end, { desc = "Dismiss notifications"})
 
-  map("n", "gt", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer tab" })
-  map("n", "gT", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous buffer tab" })
+    map("n", "gt", "<cmd>:bn<cr>", { desc = "Next buffer tab" })
+    map("n", "gT", "<cmd>:bp<cr>", { desc = "Previous buffer tab" })
 
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})
