@@ -197,22 +197,22 @@ local astro_plugins = {
   },
 
   -- Fuzzy finder
-  ["nvim-telescope/telescope.nvim"] = {
-    cmd = "Telescope",
-    module = "telescope",
-    config = function()
-      require("configs.telescope").config()
-    end,
-  },
+  -- ["nvim-telescope/telescope.nvim"] = {
+  --   cmd = "Telescope",
+  --   module = "telescope",
+  --   config = function()
+  --     require("configs.telescope").config()
+  --   end,
+  -- },
 
-  -- Fuzzy finder syntax support
-  [("nvim-telescope/telescope-%s-native.nvim"):format(vim.fn.has "win32" == 1 and "fzy" or "fzf")] = {
-    after = "telescope.nvim",
-    run = vim.fn.has "win32" ~= 1 and "make" or nil,
-    config = function()
-      require("telescope").load_extension(vim.fn.has "win32" == 1 and "fzy_native" or "fzf")
-    end,
-  },
+  -- -- Fuzzy finder syntax support
+  -- [("nvim-telescope/telescope-%s-native.nvim"):format(vim.fn.has "win32" == 1 and "fzy" or "fzf")] = {
+  --   after = "telescope.nvim",
+  --   run = vim.fn.has "win32" ~= 1 and "make" or nil,
+  --   config = function()
+  --     require("telescope").load_extension(vim.fn.has "win32" == 1 and "fzy_native" or "fzf")
+  --   end,
+  -- },
 
   -- Git integration
   ["lewis6991/gitsigns.nvim"] = {

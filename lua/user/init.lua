@@ -36,12 +36,13 @@ local config = {
     neoscroll = false,
     ts_rainbow = true,
     ts_autotag = true,
+    telescope = false
   },
 
   -- Disable AstroNvim ui features
   ui = {
     nui_input = true,
-    telescope_select = true,
+    telescope_select = false,
   },
 
   -- Configure plugins
@@ -58,6 +59,23 @@ local config = {
       },
       {
         "ctrlpvim/ctrlp.vim"
+      },
+      {
+        "fisadev/vim-ctrlp-cmdpalette"
+      },
+      {
+        "dbeecham/ctrlp-commandpalette.vim"
+      },
+      {
+        "ibhagwan/fzf-lua",
+        config = function()
+          require"fzf-lua".setup {}
+          require"fzf-lua.win".set_autoclose(false)
+        end
+      },
+      {
+        "weilbith/nvim-code-action-menu",
+        cmd = "CodeActionMenu"
       },
       {
         "terryma/vim-expand-region"
@@ -295,21 +313,57 @@ local config = {
     -- Set options
     set.relativenumber = false
     set.incsearch = true
+    set.swapfile = true
+    set.wrap = true
+    set.writebackup = true
+    set.fillchars = { eob = "~" }
 
     -- Set key bindings
     local opts = { noremap = true, silent = true }
     map("n", "<leader>py", "<cmd>Prettier<CR>", opts)
     map("n", "s", "<cmd>HopChar1<CR>", opts)
     map("n", "S", "<cmd>HopLine<CR>", opts)
-    map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", opts)
-    map("n", "<leader>:", "<cmd>Telescope commands<CR>", opts)
-    map("n", "<leader>.", "<cmd>Telescope resume<CR>", opts)
+    map("n", "<leader>ff", function()
+      require("fzf-lua").files()
+    end, opts)
+    map("n", "<leader>fb", function()
+      require("fzf-lua").buffers()
+    end, opts)
+    map("n", "<leader>ft", function()
+      require("fzf-lua").tabs()
+    end, opts)
+    map("n", "<leader>fg", function()
+      require("fzf-lua").live_grep()
+    end, opts)
+    map("n", "<leader>frg", function()
+      require("fzf-lua").live_grep_resume()
+    end, opts)
+    map("n", "<leader>fG", function()
+      require("fzf-lua").grep_project()
+    end, opts)
+    map("n", "<leader>gcp", function()
+      require("fzf-lua").git_commits()
+    end, opts)
+    map("n", "<leader>gcb", function()
+      require("fzf-lua").git_bcommits()
+    end, opts)
+    map("n", "<leader>gb", function()
+      require("fzf-lua").git_branches()
+    end, opts)
+    map("n", "<leader>gs", function()
+      require("fzf-lua").git_stash()
+    end, opts)
+
+
+    map("n", "<leader>:", function()
+      require("fzf-lua").commands()
+    end, opts)
 
     map("n", "gR", "<cmd>Trouble lsp_references<cr>", opts)
-    map("n", "F", vim.lsp.buf.code_action, { desc = "LSP code action" })
+    map("n", "F", "<cmd>CodeActionMenu<CR>", { desc = "LSP code action" })
     map("n", "R", vim.lsp.buf.rename, { desc = "Rename current symbol" })
 
-    map("n", "<leader>ft", "<cmd>NvimTreeToggle<CR>", opts)
+    map("n", "<leader>fs", "<cmd>NvimTreeToggle<CR>", opts)
     map("n", "<leader>fq", "<cmd>NvimTreeFindFile<CR>", opts)
     map("n", "<leader>nx", function()
        require("notify").dismiss({pending = true, silent = true}) 
