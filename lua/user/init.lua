@@ -146,6 +146,12 @@ local config = {
         }
       },
       {
+        "udalov/kotlin-vim",
+        ft = {
+          "kotlin"
+        }
+      },
+      {
         "jparise/vim-graphql",
         ft = {
           "graphql"
