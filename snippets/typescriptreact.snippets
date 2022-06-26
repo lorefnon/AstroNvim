@@ -1,4 +1,11 @@
+extends typescript
+
 snippet solcom "solidjs component"
+    const ${1}: Component<{${2}}> = p => {
+        return ${3};
+    }
+
+snippet solcomp "solidjs component (Primary)"
     import type { Component } from 'solid-js';
 
     const ${1}: Component<{${2}}> = p => {
@@ -11,24 +18,9 @@ snippet stag "single line tag"
     <${1}${2}>${3}</${1}>
 
 snippet mtag "multiline tag"
-
     <${1}${2}>
     </${1}>
 
 snippet imreact "import React"
     import React from "react"
-
-snippet exfun "export function"
-    export function ${1}(${2}) {${3}}
-
-snippet exdfun "export default function"
-    export default function ${1}(${2}) {${3}}
-
-snippet excon "export constant"
-    export const ${1}: ${2} = ${3};
-
-snippet exdcon "export default constant"
-    const ${1}: ${2} = ${3};
-
-    export default ${1}
 

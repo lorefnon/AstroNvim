@@ -1,0 +1,28 @@
+snippet imzod "import zod"
+    import * as z from "zod"
+
+snippet ztype "zod type"
+    export const ${1}Schema = z.${2}
+
+    export type ${1} = z.TypeOf<typeof ${1}Schema>
+
+snippet fn "export function"
+    function ${1}(${2}) {${3}}
+
+snippet exfun "export function"
+    export function ${1}(${2}) {${3}}
+
+snippet exdfun "export default function"
+    export default function ${1}(${2}) {${3}}
+
+snippet excon "export constant"
+    export const ${1}: ${2} = ${3};
+
+snippet exdcon "export default constant"
+    const ${1}: ${2} = ${3};
+
+    export default ${1}
+
+snippet exlet "export variable"
+    export let ${1}: ${2}
+
