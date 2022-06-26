@@ -24,6 +24,8 @@
 AstroNvim is an aesthetic and feature-rich neovim config that is extensible and easy to use with a great set of plugins
 </p>
 
+**_Notice:_** AstroNvim v1.4.0 has added `stable` and `nightly` update channels. For the time being we have kept the default update channel to `nightly` so that the behavior of AstroNvim doesn't change (this could be considered a breaking change to some). We are planning to make the `stable` channel the default update channel when Neovim v0.8 is released and we tag AstroNvim v2.0.0 to incorporate this "breaking" change.
+
 ## 🌟 Preview
 
 ![Preview1](https://github.com/AstroNvim/astronvim.github.io/raw/main/static/img/dashboard.png)
@@ -41,11 +43,13 @@ AstroNvim is an aesthetic and feature-rich neovim config that is extensible and 
 - Syntax highlighting with [Treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - Formatting and linting with [Null-ls](https://github.com/jose-elias-alvarez/null-ls.nvim)
 - Language Server Protocol with [Native LSP](https://github.com/neovim/nvim-lspconfig)
+- Buffer Line with [bufferline.nvim](https://github.com/akinsho/bufferline.nvim)
 
 ## ⚡ Requirements
 
 - [Nerd Fonts](https://www.nerdfonts.com/font-downloads)
 - [Neovim 0.7+](https://github.com/neovim/neovim/releases/tag/v0.7.0)
+- A clipboard tool is necessary for the integration with the system clipboard (see [`:help clipboard-tool`](https://neovim.io/doc/user/provider.html#clipboard-tool) for supported solutions)
 - Terminal with true color support (for the default theme, otherwise it is dependent on the theme you are using)
 - Optional Requirements:
   - [ripgrep](https://github.com/BurntSushi/ripgrep) - live grep telescope search (`<leader>fw`)

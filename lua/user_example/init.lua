@@ -1,5 +1,22 @@
 local config = {
 
+  -- Configure AstroNvim updates
+  updater = {
+    remote = "origin", -- remote to use
+    channel = "nightly", -- "stable" or "nightly"
+    version = "latest", -- "latest", tag name, or regex search like "v1.*" to only do updates before v2 (STABLE ONLY)
+    branch = "main", -- branch name (NIGHTLY ONLY)
+    commit = nil, -- commit hash (NIGHTLY ONLY)
+    pin_plugins = nil, -- nil, true, false (nil will pin plugins on stable only)
+    skip_prompts = false, -- skip prompts about breaking changes
+    show_changelog = true, -- show the changelog after performing an update
+    -- remotes = { -- easily add new remotes to track
+    --   ["remote_name"] = "https://remote_url.come/repo.git", -- full remote url
+    --   ["remote2"] = "github_user/repo", -- GitHub user/repo shortcut,
+    --   ["remote3"] = "github_user", -- GitHub user assume AstroNvim fork
+    -- },
+  },
+
   -- Set colorscheme
   colorscheme = "default_theme",
 
@@ -103,7 +120,7 @@ local config = {
       ensure_installed = { "sumneko_lua" },
     },
     packer = {
-      compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
+      compile_path = vim.fn.stdpath "data" .. "/packer_compiled.lua",
     },
   },
 
@@ -153,6 +170,12 @@ local config = {
     servers = {
       -- "pyright"
     },
+    -- easily add or disable built in mappings added during LSP attaching
+    mappings = {
+      n = {
+        -- ["<leader>lf"] = false -- disable formatting keymap
+      },
+    },
     -- add to the server on_attach function
     -- on_attach = function(client, bufnr)
     -- end,
@@ -185,12 +208,22 @@ local config = {
     underline = true,
   },
 
-  -- This function is run last
-  -- good place to configure mappings and vim options
-  polish = function()
-    -- Set key bindings
-    vim.keymap.set("n", "<C-s>", ":w!<CR>")
+  mappings = {
+    -- first key is the mode
+    n = {
+      -- second key is the lefthand side of the map
+      ["<C-s>"] = { ":w!<cr>", desc = "Save File" },
+    },
+    t = {
+      -- setting a mapping to false will disable it
+      -- ["<esc>"] = false,
+    },
+  },
 
+  -- This function is run last
+  -- good place to configuring augroups/autocommands and custom filetypes
+  polish = function()
+    -- Set key binding
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", { clear = true })
     vim.api.nvim_create_autocmd("BufWritePost", {

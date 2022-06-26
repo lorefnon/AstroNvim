@@ -1,11 +1,13 @@
 _G.astronvim = {}
 local stdpath = vim.fn.stdpath
 local tbl_insert = table.insert
+local map = vim.keymap.set
 
-local supported_configs = {
-  stdpath "config",
-  stdpath "config" .. "/../astronvim",
-}
+astronvim.install = astronvim_installation or { home = stdpath "config" }
+
+local astronvim_config = stdpath("config"):gsub("nvim$", "astronvim")
+vim.opt.rtp:append(astronvim_config)
+local supported_configs = { astronvim.install.home, astronvim_config }
 
 local function load_module_file(module)
   local found_module = nil
@@ -20,16 +22,17 @@ local function load_module_file(module)
     if status_ok then
       found_module = loaded_module
     else
-      vim.notify("Error loading " .. found_module, "error", astronvim.base_notification)
+      astronvim.notify("Error loading " .. found_module, "error")
     end
   end
   return found_module
 end
 
 astronvim.user_settings = load_module_file "user.init"
-astronvim.default_compile_path = stdpath "config" .. "/lua/packer_compiled.lua"
-astronvim.base_notification = { title = "AstroNvim" }
+astronvim.default_compile_path = stdpath "data" .. "/packer_compiled.lua"
 astronvim.user_terminals = {}
+astronvim.url_matcher =
+  "\\v\\c%(%(h?ttps?|ftp|file|ssh|git)://|[a-z]+[@][a-z]+[.][a-z]+:)%([&:#*@~%_\\-=?!+;/0-9a-z]+%(%([.;/?]|[.][.]+)[&:#*@~%_\\-=?!+/0-9a-z]+|:\\d+|,%(%(%(h?ttps?|ftp|file|ssh|git)://|[a-z]+[@][a-z]+[.][a-z]+:)@![0-9a-z]+))*|\\([&:#*@~%_\\-=?!+;/.0-9a-z]*\\)|\\[[&:#*@~%_\\-=?!+;/.0-9a-z]*\\]|\\{%([&:#*@~%_\\-=?!+;/.0-9a-z]*|\\{[&:#*@~%_\\-=?!+;/.0-9a-z]*})\\})+"
 
 local function func_or_extend(overrides, default, extend)
   if extend then
@@ -42,6 +45,37 @@ local function func_or_extend(overrides, default, extend)
     default = overrides
   end
   return default
+end
+
+function astronvim.conditional_func(func, condition, ...)
+  if (condition == nil and true or condition) and type(func) == "function" then
+    return func(...)
+  end
+end
+
+function astronvim.trim_or_nil(str)
+  return type(str) == "string" and vim.trim(str) or nil
+end
+
+function astronvim.notify(msg, type, opts)
+  vim.notify(msg, type, vim.tbl_deep_extend("force", { title = "AstroNvim" }, opts or {}))
+end
+
+function astronvim.echo(messages)
+  messages = messages or { { "\n" } }
+  if type(messages) == "table" then
+    vim.api.nvim_echo(messages, false, {})
+  end
+end
+
+function astronvim.confirm_prompt(messages)
+  if messages then
+    astronvim.echo(messages)
+  end
+  local confirmed = string.lower(vim.fn.input "(y/n) ") == "y"
+  astronvim.echo()
+  astronvim.echo()
+  return confirmed
 end
 
 local function user_setting_table(module)
@@ -68,11 +102,11 @@ function astronvim.initialize_packer()
       "https://github.com/wbthomason/packer.nvim",
       packer_path,
     }
-    print "Cloning packer...\nSetup AstroNvim"
+    astronvim.echo { { "Initializing Packer...\n\n" } }
     vim.cmd "packadd packer.nvim"
     packer_avail, packer = pcall(require, "packer")
     if not packer_avail then
-      error("Failed to load packer at:" .. packer_path .. "\n\n" .. packer)
+      vim.api.nvim_err_writeln("Failed to load packer at:" .. packer_path .. "\n\n" .. packer)
     end
   end
   return packer
@@ -86,13 +120,13 @@ function astronvim.vim_opts(options)
   end
 end
 
-function astronvim.user_plugin_opts(module, default, extend)
+function astronvim.user_plugin_opts(module, default, extend, prefix)
   if extend == nil then
     extend = true
   end
   default = default or {}
-  local user_settings = load_module_file("user." .. module)
-  if user_settings == nil then
+  local user_settings = load_module_file((prefix or "user") .. "." .. module)
+  if user_settings == nil and prefix == nil then
     user_settings = user_setting_table(module)
   end
   if user_settings ~= nil then
@@ -108,7 +142,7 @@ function astronvim.compiled()
   if run_me then
     run_me()
   else
-    print "Please run :PackerSync"
+    astronvim.echo { { "Please run " }, { ":PackerSync", "Title" } }
   end
 end
 
@@ -118,7 +152,7 @@ function astronvim.url_opener()
   elseif vim.fn.has "unix" == 1 then
     vim.fn.jobstart({ "xdg-open", vim.fn.expand "<cfile>" }, { detach = true })
   else
-    vim.notify("gx is not supported on this OS!", "error", astronvim.base_notification)
+    astronvim.notify("gx is not supported on this OS!", "error")
   end
 end
 
@@ -214,6 +248,23 @@ function astronvim.is_available(plugin)
   return packer_plugins ~= nil and packer_plugins[plugin] ~= nil
 end
 
+function astronvim.set_mappings(map_table, base)
+  for mode, maps in pairs(map_table) do
+    for keymap, options in pairs(maps) do
+      if options then
+        local cmd = options
+        if type(options) == "table" then
+          cmd = options[1]
+          options[1] = nil
+        else
+          options = {}
+        end
+        map(mode, keymap, cmd, vim.tbl_deep_extend("force", options, base or {}))
+      end
+    end
+  end
+end
+
 function astronvim.delete_url_match()
   for _, match in ipairs(vim.fn.getmatches()) do
     if match.group == "HighlightURL" then
@@ -225,11 +276,7 @@ end
 function astronvim.set_url_match()
   astronvim.delete_url_match()
   if vim.g.highlighturl_enabled then
-    vim.fn.matchadd(
-      "HighlightURL",
-      "\\v\\c%(%(h?ttps?|ftp|file|ssh|git)://|[a-z]+[@][a-z]+[.][a-z]+:)%([&:#*@~%_\\-=?!+;/0-9a-z]+%(%([.;/?]|[.][.]+)[&:#*@~%_\\-=?!+/0-9a-z]+|:\\d+|,%(%(%(h?ttps?|ftp|file|ssh|git)://|[a-z]+[@][a-z]+[.][a-z]+:)@![0-9a-z]+))*|\\([&:#*@~%_\\-=?!+;/.0-9a-z]*\\)|\\[[&:#*@~%_\\-=?!+;/.0-9a-z]*\\]|\\{%([&:#*@~%_\\-=?!+;/.0-9a-z]*|\\{[&:#*@~%_\\-=?!+;/.0-9a-z]*})\\})+",
-      15
-    )
+    vim.fn.matchadd("HighlightURL", astronvim.url_matcher, 15)
   end
 end
 
@@ -238,37 +285,15 @@ function astronvim.toggle_url_match()
   astronvim.set_url_match()
 end
 
-function astronvim.update()
-  (require "plenary.job")
-    :new({
-      command = "git",
-      args = { "pull", "--ff-only" },
-      cwd = stdpath "config",
-      on_exit = function(_, return_val)
-        if return_val == 0 then
-          vim.notify("Updated!", "info", astronvim.base_notification)
-        else
-          vim.notify("Update failed! Please try pulling manually.", "error", astronvim.base_notification)
-        end
-      end,
-    })
-    :sync()
+function astronvim.cmd(cmd, show_error)
+  local result = vim.fn.system(cmd)
+  local success = vim.api.nvim_get_vvar "shell_error" == 0
+  if not success and (show_error == nil and true or show_error) then
+    vim.api.nvim_err_writeln("Error running command: " .. cmd .. "\nError message:\n" .. result)
+  end
+  return success and result or nil
 end
-function astronvim.version()
-  (require "plenary.job")
-    :new({
-      command = "git",
-      args = { "describe", "--tags" },
-      cwd = stdpath "config",
-      on_exit = function(out, return_val)
-        if return_val == 0 then
-          vim.notify("Version: " .. out:result()[1], "info", astronvim.base_notification)
-        else
-          vim.notify("Error retrieving version", "error", astronvim.base_notification)
-        end
-      end,
-    })
-    :start()
-end
+
+require "core.utils.updater"
 
 return astronvim

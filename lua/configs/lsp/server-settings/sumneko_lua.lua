@@ -1,4 +1,5 @@
 return {
+  on_attach = astronvim.lsp.disable_formatting,
   settings = {
     Lua = {
       diagnostics = {
@@ -7,7 +8,7 @@ return {
       workspace = {
         library = {
           [vim.fn.expand "$VIMRUNTIME/lua"] = true,
-          [vim.fn.stdpath "config" .. "/lua"] = true,
+          [astronvim.install.home .. "/lua"] = true,
         },
       },
     },
