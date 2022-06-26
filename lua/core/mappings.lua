@@ -221,9 +221,9 @@ end
 -- map("n", "<A-k>", "<Esc><cmd>m .-2<CR>==gi", { desc = "Move text up" })
 
 -- LSP
-map("n", "K", vim.lsp.buf.hover, { desc = "Hover symbol details" })
+maps.n["K"] = { "<cmd>vim.lsp.buf.hover",  desc = "Hover symbol details" }
 -- <leader>rn: legacy binding here for backwards compatibility but not in which-key (see <leader>lr)
-map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename current symbol" })
+maps.n["<leader>rn"] = { "<cmd>vim.lsp.buf.rename", desc = "Rename current symbol" }
 -- SymbolsOutline
 if is_available "aerial.nvim" then
   maps.n["<leader>lS"] = { "<cmd>AerialToggle<cr>", desc = "Symbols outline" }
@@ -418,8 +418,8 @@ maps.v["<"] = { "<gv", desc = "unindent line" }
 maps.v[">"] = { ">gv", desc = "indent line" }
 
 -- Improved Terminal Mappings
-map("t", "<esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
-map("t", "jk", "<C-\\><C-n>", { desc = "Terminal normal mode" })
+maps.t["<esc>"] = { "<C-\\><C-n>", desc = "Terminal normal mode" }
+maps.t["jk"] = { "<C-\\><C-n>", desc = "Terminal normal mode" }
 -- map("t", "<C-h>", "<c-\\><c-n><c-w>h", { desc = "Terminal left window navigation" })
 -- map("t", "<C-j>", "<c-\\><c-n><c-w>j", { desc = "Terminal down window navigation" })
 -- map("t", "<C-k>", "<c-\\><c-n><c-w>k", { desc = "Terminal up window navigation" })
