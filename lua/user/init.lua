@@ -36,7 +36,8 @@ local config = {
     neoscroll = false,
     ts_rainbow = true,
     ts_autotag = true,
-    telescope = false
+    telescope = false,
+    luasnip = false
   },
 
   -- Disable AstroNvim ui features
@@ -56,15 +57,6 @@ local config = {
           }
         end,
         opt = false,
-      },
-      {
-        "ctrlpvim/ctrlp.vim"
-      },
-      {
-        "fisadev/vim-ctrlp-cmdpalette"
-      },
-      {
-        "dbeecham/ctrlp-commandpalette.vim"
       },
       {
         "ibhagwan/fzf-lua",
@@ -100,16 +92,10 @@ local config = {
         end
       },
       {
-        "ddrscott/vim-side-search"
-      },
-      {
         "tpope/vim-fugitive",
         cmd = {
           "G"
         }
-      },
-      {
-        "tpope/vim-vinegar"
       },
       {
         "tpope/vim-sleuth"
@@ -140,12 +126,6 @@ local config = {
         }
       },
       {
-        "fsharp/vim-fsharp",
-        ft = {
-          "fs", "fsharp"
-        }
-      },
-      {
         "udalov/kotlin-vim",
         ft = {
           "kotlin"
@@ -156,12 +136,6 @@ local config = {
         ft = {
           "graphql"
         }
-      },
-      {
-          "edgedb/edgedb-vim",
-          ft = {
-              "edgeql"
-          }
       },
       {
           "digitaltoad/vim-pug",
@@ -200,6 +174,15 @@ local config = {
       },
       {
         "gpanders/editorconfig.nvim",
+      },
+      {
+        "nvim-pack/nvim-spectre"
+      },
+      {
+        "L3MON4D3/LuaSnip",
+        config = function()
+          require("luasnip.loaders.from_snipmate").lazy_load()
+        end
       }
     },
     -- All other entries override the setup() call for default plugins
@@ -377,6 +360,22 @@ local config = {
 
     map("n", "gt", "<cmd>:bn<cr>", { desc = "Next buffer tab" })
     map("n", "gT", "<cmd>:bp<cr>", { desc = "Previous buffer tab" })
+
+    map("n", "<leader>Sr", function()
+      require("spectre").open()
+    end, { desc = "Open Spectre"})
+
+    map("n", "<leader>Swr", function()
+      require("spectre").open_visual({select_word = true})
+    end, { desc = "Open Spectre and search current word"})
+
+    map("n", "<leader>Svr", function()
+      require("spectre").open_visual()
+    end, { desc = "Open Spectre (visual)"})
+
+    map("n", "<leader>Sf", function()
+      require("spectre").open_file_search()
+    end, { desc = "Spectre file search"})
 
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})
