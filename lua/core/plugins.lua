@@ -116,16 +116,16 @@ local astro_plugins = {
   },
 
   -- Snippet collection
-  ["rafamadriz/friendly-snippets"] = { opt = true },
+  -- ["rafamadriz/friendly-snippets"] = { opt = true },
 
   -- Snippet engine
-  ["L3MON4D3/LuaSnip"] = {
-    module = "luasnip",
-    wants = "friendly-snippets",
-    config = function()
-      require "configs.luasnip"
-    end,
-  },
+  -- ["L3MON4D3/LuaSnip"] = {
+  --   module = "luasnip",
+  --   wants = "friendly-snippets",
+  --   config = function()
+  --     require "configs.luasnip"
+  --   end,
+  -- },
 
   -- Completion engine
   ["hrsh7th/nvim-cmp"] = {

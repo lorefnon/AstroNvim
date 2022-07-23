@@ -37,7 +37,7 @@ local config = {
     ts_rainbow = true,
     ts_autotag = true,
     telescope = false,
-    luasnip = false
+    -- luasnip = false
   },
 
   -- Disable AstroNvim ui features
