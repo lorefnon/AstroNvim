@@ -51,6 +51,15 @@ local config = {
     -- Add plugins, the packer syntax without the "use"
     init = {
       {
+        "ray-x/go.nvim",
+        config = function() 
+          require('go').setup()
+        end,
+        ft = {
+          "go"
+        }
+      },
+      {
         "kyazdani42/nvim-tree.lua",
         config = function()
           require'nvim-tree'.setup {
@@ -188,6 +197,9 @@ local config = {
     -- All other entries override the setup() call for default plugins
     treesitter = {
       ensure_installed = { "lua" },
+      autotag = { 
+        enable = true
+      }
     },
     packer = {
       compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
@@ -224,9 +236,6 @@ local config = {
 
   -- Extend LSP configuration
   lsp = {
-    -- add to the server on_attach function
-    -- on_attach = function(client, bufnr)
-    -- end,
 
     -- override the lsp installer server-registration function
     -- server_registration = function(server, opts)
