@@ -51,6 +51,13 @@ local config = {
     -- Add plugins, the packer syntax without the "use"
     init = {
       {
+        "nathom/filetype.nvim",
+        config = function()
+          require("filetype").setup({
+          })
+        end,
+      },
+      {
         "ray-x/go.nvim",
         config = function() 
           require('go').setup()
@@ -73,6 +80,12 @@ local config = {
           require"fzf-lua".setup {}
           require"fzf-lua.win".set_autoclose(false)
         end
+      },
+      {
+        "shmup/vim-sql-syntax",
+        ft = {
+          "sql"
+        }
       },
       {
         "weilbith/nvim-code-action-menu",
