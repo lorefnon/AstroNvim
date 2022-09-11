@@ -51,6 +51,13 @@ local config = {
     -- Add plugins, the packer syntax without the "use"
     init = {
       {
+        "gbprod/yanky.nvim",
+        config = function()
+          require("yanky").setup({
+          })
+        end,
+      },
+      {
         "nathom/filetype.nvim",
         config = function()
           require("filetype").setup({
@@ -398,6 +405,13 @@ local config = {
     map("n", "<leader>Sf", function()
       require("spectre").open_file_search()
     end, { desc = "Spectre file search"})
+
+    map({"n","x"}, "p", "<Plug>(YankyPutAfter)")
+    map({"n","x"}, "P", "<Plug>(YankyPutBefore)")
+    map({"n","x"}, "gp", "<Plug>(YankyGPutAfter)")
+    map({"n","x"}, "gP", "<Plug>(YankyGPutBefore)")
+    map("n", "<leader>yn", "<Plug>(YankyCycleForward)")
+    map("n", "<leader>yp", "<Plug>(YankyCycleBackward)")
 
     -- Set autocommands
     vim.api.nvim_create_augroup("packer_conf", {})
