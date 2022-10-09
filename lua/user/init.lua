@@ -64,13 +64,28 @@ local config = {
           })
         end,
       },
+      -- {
+      --   "ray-x/go.nvim",
+      --   config = function() 
+      --     require('go').setup()
+      --   end,
+      --   ft = {
+      --     "go"
+      --   }
+      -- },
       {
-        "ray-x/go.nvim",
-        config = function() 
-          require('go').setup()
-        end,
+        "fatih/vim-go",
         ft = {
           "go"
+        }
+      },
+      {
+        "alaviss/nim.nvim",
+      },
+      {
+        "posva/vim-vue",
+        ft = {
+          "vue"
         }
       },
       {
@@ -169,7 +184,7 @@ local config = {
       {
           "digitaltoad/vim-pug",
           ft = {
-              "pug"
+              "pug", "vue"
           }
       },
       {
